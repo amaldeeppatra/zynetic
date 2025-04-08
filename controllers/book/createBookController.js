@@ -1,8 +1,9 @@
 const Book = require('../../models/book');
 
 async function createBookHandler(req, res){
-    const { bookId, title, author, category, price, rating, publishedDate } = req.body;
     try{
+        const { bookId, title, author, category, price, rating, publishedDate } = req.body;
+        
         // check if any missing entries
         if(!title || !author || !category || !price || !rating || !publishedDate){
             return res.status(400).json({ message: "Please fill all the fields" });

@@ -1,8 +1,9 @@
 const User = require('../../models/user');
 
 async function signupHandler(req, res){
-    const { email, password } = req.body;
     try{
+        const { email, password } = req.body;
+        
         // check for missing fields
         if (!email || !password) {
             return res.status(400).json({ message: 'Please fill in all fields' });

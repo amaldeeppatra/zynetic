@@ -1,8 +1,9 @@
 const User = require('../../models/user');
 
 async function loginHandler(req, res){
-    const { email, password } = req.body;
     try{
+        const { email, password } = req.body;
+        
         const token = await User.matchPasswordAndGenerateToken(email, password);
         const user = await User.findOne({ email});
         
