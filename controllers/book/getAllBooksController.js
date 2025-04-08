@@ -3,7 +3,7 @@ const { Decimal128 } = require('mongodb');
 
 async function getAllBooksHandler(req, res){
     try{
-        const { author, category, rating, title } = req.query;
+        const { author, category, rating, title, sortOrder = 'desc' } = req.query;
 
         // for filtering by author, category, and rating
         const filter = {};
@@ -22,7 +22,9 @@ async function getAllBooksHandler(req, res){
             filter.title = { $regex: title, $options: 'i' };
         }
 
-        const books = await Book.find(filter);
+        const sortDirection = sortOrder === 'asc' ? 1 : -1;
+
+        const books = await Book.find(filter).sort({ rating: sortDirection });
 
         if(!books || books.length === 0){
             return res.status(404).json({message: "No books found"});

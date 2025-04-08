@@ -1,0 +1,209 @@
+openapi: 3.0.0
+info:
+  title: Books API
+  version: 1.0.0
+  description: RESTful APIs for Books
+
+servers:
+  - url: http://localhost:5000/api
+
+paths:
+
+  /auth/signup:
+    post:
+      summary: User Signup
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AuthInput'
+      responses:
+        '201':
+          description: User created successfully
+        '400':
+          description: Invalid input or user already exists
+
+  /auth/login:
+    post:
+      summary: User Login
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AuthInput'
+      responses:
+        '200':
+          description: User logged in successfully
+        '401':
+          description: Invalid email or password
+
+  /book/getAll:
+    get:
+      summary: Get all books
+      description: Fetch all books with optional filters and search
+      parameters:
+        - in: query
+          name: author
+          schema:
+            type: string
+        - in: query
+          name: category
+          schema:
+            type: string
+        - in: query
+          name: rating
+          schema:
+            type: number
+        - in: query
+          name: title
+          schema:
+            type: string
+            description: Partial match on book title
+        - in: query
+          name: sortBy
+          schema:
+            type: string
+            enum: [price, rating]
+        - in: query
+          name: sortOrder
+          schema:
+            type: string
+            enum: [asc, desc]
+        - in: query
+          name: page
+          schema:
+            type: integer
+        - in: query
+          name: limit
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: A list of books
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  books:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Book'
+
+  /book/create:
+    post:
+      summary: Create a new book
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BookInput'
+      responses:
+        '201':
+          description: Book created successfully
+
+  /book/id/{bookId}:
+    get:
+      summary: Get a book by bookId
+      parameters:
+        - in: path
+          name: bookId
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Found the book
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  book:
+                    $ref: '#/components/schemas/Book'
+        '404':
+          description: Book not found
+
+  /book/{bookId}:
+    put:
+      summary: Update a book by bookId
+      parameters:
+        - in: path
+          name: bookId
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BookInput'
+      responses:
+        '200':
+          description: Book updated successfully
+        '404':
+          description: Book not found
+
+    delete:
+      summary: Delete a book by bookId
+      parameters:
+        - in: path
+          name: bookId
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Book deleted successfully
+        '404':
+          description: Book not found
+
+components:
+  schemas:
+    Book:
+      type: object
+      properties:
+        bookId:
+          type: string
+        title:
+          type: string
+        author:
+          type: string
+        category:
+          type: string
+        price:
+          type: number
+        rating:
+          type: number
+        publishedDate:
+          type: string
+          format: date
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+
+    User:
+      type: object
+      required:
+        - email
+        - password
+      properties:
+        email:
+          type: string
+          format: email
+          example: user@example.com
+        password:
+          type: string
+          format: password
+          example: mysecurepassword
