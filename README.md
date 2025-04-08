@@ -31,6 +31,9 @@ Go to http://localhost:5000/api
 
 /book/delete/:bookId - Delete A Book By Its Id
 
+### API DOCS
+Go to http://localhost:5000/api-docs for API documentation.
+
 ## NOTE:
 You can create an account or use this test email and password
 
